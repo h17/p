@@ -1,10 +1,13 @@
+import numpy as np
+import pandas as pd
+
 def describe(df,median=True):
     res = df.describe().T
     N = df.shape[0]
     for c in df.columns:
         unique = len(df[c].unique())
         res.loc[c,'unique'] = unique
-        res.loc[c,'unique%'] = unique/N
+        res.loc[c,'unique%'] = unique / N
         vc = df[c].value_counts(dropna=False)
         p = vc / N
         res.loc[c,'bits_of_info_nan'] = -(p*np.log2(p)).sum()
@@ -18,6 +21,6 @@ def describe(df,median=True):
     if median==True: 
         output_columns += ['median']
     output_columns += ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
-    res = res[output_columns].sort_values('bits_of_info')
+    res = res[output_columns].sort_values('bits_of_info',ascending=False)
     return res
     
